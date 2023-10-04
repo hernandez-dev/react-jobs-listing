@@ -69,7 +69,7 @@ return(
           {job.postedAt} . {job.contract} . {job.location}
         </p>
       </div>
-      <div className="pt-5 mt-6 border-t border-very-dark-grayish-cyan/30 lg:pt-0 lg:border-none">
+      <div className="pt-5 mt-6 border-t border-very-dark-grayish-cyan/30 lg:pt-0 lg:border-none lg:mt-0">
         {job.languages.map(language => (
           <button
             key={language}
