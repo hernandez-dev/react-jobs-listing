@@ -1,11 +1,42 @@
 import { useState, useEffect } from 'react'
+import { useImmerReducer } from "use-immer"
+
+// context
+import AppState from "./context/AppState.js"
+import AppDispatch from "./context/AppDispatch.js"
 
 // components
-import { JobPost } from "./components/"
+import {
+  PostedJobsList,
+  JobPost
+} from "./components/"
 
 function App() {
-  // state
-  const [jobs, setJobs] = useState([])
+  // initialState
+  const initialState = {
+    jobs: [],
+    languages: []
+  }
+
+  // reducer
+  function reducer(draft, action) {
+    switch(action.type) {
+      case "set-jobs":
+        draft.jobs = action.value
+        break
+      case "insert-filter-language":
+        draft.languages.push(action.value)
+        break
+      case "remove-filter-language":
+        draft.languages = draft.languages.filter(language => language.toLowerCase() != action.value.toLowerCase())
+        break
+      case "clear-filter-languages":
+        draft.languages = []
+        break
+    }
+  }
+
+  const [state, dispatch] = useImmerReducer(reducer, initialState)
 
   // component mounted
   useEffect(() => {
@@ -13,8 +44,7 @@ function App() {
       try {
         const response = await fetch("/data.json")
         const jobs = await response.json()
-        console.log(jobs)
-        setJobs(jobs)
+        dispatch({ type: "set-jobs", value: jobs })
       } catch (e) {
         console.log(e)
       }
@@ -23,21 +53,23 @@ function App() {
   }, [])
 
   return (
-    <main className="">
-      <div className="bg-desaturated-dark-cyan">
-        <picture>
-          <source media="(min-width:768px)" srcset="/images/bg-header.svg" />
-          <img
-            src="/images/bg-header-mobile.svg"
-            alt="top section image"
-            className="block w-full"
-          />
-        </picture>
-      </div>
-      <div className="max-w-6xl mx-auto p-10 pt-0">
-        {jobs.map(job => <JobPost key={job.id} job={job} />)}
-      </div>
-    </main>
+    <AppState.Provider value={state}>
+      <AppDispatch.Provider value={dispatch}>
+        <main className="">
+          <div className="relative bg-desaturated-dark-cyan">
+            <picture>
+              <source media="(min-width:768px)" srcset="/images/bg-header.svg" />
+              <img
+                src="/images/bg-header-mobile.svg"
+                alt="top section image"
+                className="block w-full"
+              />
+            </picture>
+          </div>
+          <PostedJobsList />
+        </main>
+      </AppDispatch.Provider>
+    </AppState.Provider>
   )
 }
 
