@@ -39,9 +39,9 @@ export default function JobPost({ job }) {
 return(
   <article className={`relative p-5 bg-white mt-16 first:mt-0 border-l-4 ${job.featured ? 'border-desaturated-dark-cyan' : 'border-white'} rounded-lg shadow-lg shadow-desaturated-dark-cyan/30 ${count ? 'lg:flex lg:items-center lg:p-8 lg:mt-10' : 'hidden'}`}>
     <div className="hidden lg:block lg:w-20">
-      <img
-        src={job.logo}
-    alt={job.name}
+        <img
+          src={job.logo}
+          alt={job.company}
           className="block w-full"
         />
       </div>
@@ -83,7 +83,7 @@ return(
       <div className="absolute top-0 left-5 z-5 -translate-y-1/2 w-16 lg:hidden">
         <img
           src={job.logo}
-          alt={job.name}
+          alt={job.company}
           className="block w-full"
         />
       </div>
